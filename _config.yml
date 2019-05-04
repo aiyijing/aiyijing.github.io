@@ -51,7 +51,8 @@ highlight:
 # Google搜索引擎优化
 sitemap:
   path: sitemap.xml
-
+baidusitemap:
+  path: baidusitemap.xml
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
