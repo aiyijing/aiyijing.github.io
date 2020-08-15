@@ -89,5 +89,5 @@ theme: hexo-theme-indigo
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/aiyijing/aiyijing.github.io.git
+  repo: git@github.com:aiyijing/aiyijing.github.io.git
   branch: master
