@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>桌面快捷方式定制 | Jay&#39;s Blog | 用技术改变生活</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="ubuntu">
+    <meta name="description" content="作为一个日常工作都离不开Linux Ubuntu的IT程序员。Linux下很多工具都需要用命令行打开软件。这样还是带来了许多的不便。所以便收集了ubuntu的桌面启动方式修改和定制,一切都只是为了提高效率。这次我们以 WebStorm为例子介绍如何配置自己的桌面快捷方式 材料准备 WebStorm Linux 启动包 icon图标 Ubuntu系统安装WebStorm Linux 启动包其实并不是">
+<meta name="keywords" content="ubuntu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="桌面快捷方式定制">
+<meta property="og:url" content="https://blog.codeasy.cn/post/d7fffe82.html">
+<meta property="og:site_name" content="Jay&#39;s Blog">
+<meta property="og:description" content="作为一个日常工作都离不开Linux Ubuntu的IT程序员。Linux下很多工具都需要用命令行打开软件。这样还是带来了许多的不便。所以便收集了ubuntu的桌面启动方式修改和定制,一切都只是为了提高效率。这次我们以 WebStorm为例子介绍如何配置自己的桌面快捷方式 材料准备 WebStorm Linux 启动包 icon图标 Ubuntu系统安装WebStorm Linux 启动包其实并不是">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2019/png/279029/1551436004561-e26dd9af-8dea-459d-ad56-215fd83f55e0.png#align=left&display=inline&height=208&name=image.png&originHeight=475&originWidth=1139&size=61448&status=done&width=500">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2019/png/279029/1551436083129-118bc7ec-88a1-473c-b3b0-28d7bcd26183.png#align=left&display=inline&height=324&name=image.png&originHeight=487&originWidth=491&size=41390&status=done&width=327">
+<meta property="og:updated_time" content="2020-08-15T10:18:45.423Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="桌面快捷方式定制">
+<meta name="twitter:description" content="作为一个日常工作都离不开Linux Ubuntu的IT程序员。Linux下很多工具都需要用命令行打开软件。这样还是带来了许多的不便。所以便收集了ubuntu的桌面启动方式修改和定制,一切都只是为了提高效率。这次我们以 WebStorm为例子介绍如何配置自己的桌面快捷方式 材料准备 WebStorm Linux 启动包 icon图标 Ubuntu系统安装WebStorm Linux 启动包其实并不是">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2019/png/279029/1551436004561-e26dd9af-8dea-459d-ad56-215fd83f55e0.png#align=left&display=inline&height=208&name=image.png&originHeight=475&originWidth=1139&size=61448&status=done&width=500">
+    
+        <link rel="alternate" type="application/atom+xml" title="Jay&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Jay Ai</h5>
+          <a href="mailto:aiyijing@codeasy.cn" title="aiyijing@codeasy.cn" class="mail">aiyijing@codeasy.cn</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/aiyijing" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">桌面快捷方式定制</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">桌面快捷方式定制</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-01T10:46:08.000Z" itemprop="datePublished" class="page-time">
+  2019-03-01
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/知识备忘/">知识备忘</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#材料准备"><span class="post-toc-number">1.</span> <span class="post-toc-text">材料准备</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#安装WebStorm-Linux-启动包"><span class="post-toc-number">2.</span> <span class="post-toc-text">安装WebStorm Linux 启动包</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#创建-desktop文件并编辑参数"><span class="post-toc-number">3.</span> <span class="post-toc-text">创建*.desktop文件并编辑参数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#配置名词解释"><span class="post-toc-number">4.</span> <span class="post-toc-text">配置名词解释</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-桌面快捷方式定制" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">桌面快捷方式定制</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-01 18:46:08" datetime="2019-03-01T10:46:08.000Z" itemprop="datePublished">2019-03-01</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/知识备忘/">知识备忘</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>作为一个日常工作都离不开Linux Ubuntu的IT程序员。Linux下很多工具都需要用命令行打开软件。这样还是带来了许多的不便。所以便收集了ubuntu的桌面启动方式修改和定制,一切都只是为了提高效率。这次我们以 WebStorm为例子介绍如何配置自己的桌面快捷方式<br><a name="2e403f9a"></a></p>
+<h3 id="材料准备"><a href="#材料准备" class="headerlink" title="材料准备"></a>材料准备</h3><ol>
+<li>WebStorm Linux 启动包</li>
+<li>icon图标</li>
+<li>Ubuntu系统<br><a name="3f608bc8"></a><h3 id="安装WebStorm-Linux-启动包"><a href="#安装WebStorm-Linux-启动包" class="headerlink" title="安装WebStorm Linux 启动包"></a>安装WebStorm Linux 启动包</h3>其实并不是安装，只是个人习惯。把软件统一的放到一个文件夹下。ubuntu默认是<code>/opt/</code>如图</li>
+</ol>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.nlark.com/yuque/0/2019/png/279029/1551436004561-e26dd9af-8dea-459d-ad56-215fd83f55e0.png#align=left&display=inline&height=208&name=image.png&originHeight=475&originWidth=1139&size=61448&status=done&width=500" alt="image.png" title>
+                </div>
+                <div class="image-caption">image.png</div>
+            </figure><br>记下 WebStorm的启动脚本路径：<code>/opt/WebStorm/bin/webstorm.sh</code><br><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.nlark.com/yuque/0/2019/png/279029/1551436083129-118bc7ec-88a1-473c-b3b0-28d7bcd26183.png#align=left&display=inline&height=324&name=image.png&originHeight=487&originWidth=491&size=41390&status=done&width=327" alt="image.png" title>
+                </div>
+                <div class="image-caption">image.png</div>
+            </figure>
+<p><a name="0985493b"></a></p>
+<h3 id="创建-desktop文件并编辑参数"><a href="#创建-desktop文件并编辑参数" class="headerlink" title="创建*.desktop文件并编辑参数"></a>创建*.desktop文件并编辑参数</h3><p>Ubunut默认的*.desktop文件都放在 <code>/usr/share/applictions/</code>目录<br><code>vim /usr/share/applictions/webstorm.desktop</code><br>复制如下文件<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin</span></span><br><span class="line">[Desktop Entry]</span><br><span class="line">Name = WebStorm</span><br><span class="line">Encoding=UTF-8</span><br><span class="line">Comment= WebStorm</span><br><span class="line">Exec=/opt/WebStorm/bin/webstorm.sh</span><br><span class="line">Icon=/opt/WebStorm/bin/webstorm.png</span><br><span class="line">Categories=Application;Development;</span><br><span class="line">Terminal=false</span><br><span class="line">Type=Application</span><br></pre></td></tr></table></figure></p>
+<p>保存退出完成，此时我能在Ubuntu自带的dock里搜索到该应用，我们还能将这个文件复制到桌面。方便自己的点击<br><a name="8caa19f3"></a></p>
+<h3 id="配置名词解释"><a href="#配置名词解释" class="headerlink" title="配置名词解释"></a>配置名词解释</h3><p>一下我们对脚本进行解释</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>值</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td></td>
+<td>快捷方式显示的名称</td>
+</tr>
+<tr>
+<td>Encoding</td>
+<td>UTF-8</td>
+<td>程序运行的编码</td>
+</tr>
+<tr>
+<td>Path</td>
+<td>脚本第一行</td>
+<td>环境变量，需要的运行环境</td>
+</tr>
+<tr>
+<td>Comment</td>
+<td>*</td>
+<td>用于dock 搜索索引</td>
+</tr>
+<tr>
+<td>Exec</td>
+<td>程序路径</td>
+<td>程序运行的脚本命令或者路径：eg java -jar xxx.jar</td>
+</tr>
+<tr>
+<td>Categories</td>
+<td>Application;Development;</td>
+<td>dock 分类目录</td>
+</tr>
+<tr>
+<td>Icon</td>
+<td>png jpg 路径</td>
+<td>快捷方式图标</td>
+</tr>
+</tbody>
+</table>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-15T10:18:45.423Z" itemprop="dateUpdated">2020-08-15 18:18:45</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.codeasy.cn">
+            <img src="/img/avatar.jpg" alt="Jay Ai">
+            Jay Ai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.codeasy.cn/post/d7fffe82.html&title=《桌面快捷方式定制》 — Jay's Blog&pic=https://blog.codeasy.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.codeasy.cn/post/d7fffe82.html&title=《桌面快捷方式定制》 — Jay's Blog&source=用技术改变生活" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.codeasy.cn/post/d7fffe82.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《桌面快捷方式定制》 — Jay's Blog&url=https://blog.codeasy.cn/post/d7fffe82.html&via=https://blog.codeasy.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.codeasy.cn/post/d7fffe82.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/post/5bd45715.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">进入暗网-Tor v3 Sock5 转HTTP代理</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/post/7a4b0be1.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">HSTS协议分析与Nginx配置</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+<section class="comments" id="comments">
+    <div id="disqus_thread"></div>
+    <script>
+    var disqus_shortname = 'blog-codeasy-cn';
+    lazyScripts.push('//' + disqus_shortname + '.disqus.com/embed.js')
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Jay Ai &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.codeasy.cn/post/d7fffe82.html&title=《桌面快捷方式定制》 — Jay's Blog&pic=https://blog.codeasy.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.codeasy.cn/post/d7fffe82.html&title=《桌面快捷方式定制》 — Jay's Blog&source=用技术改变生活" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.codeasy.cn/post/d7fffe82.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《桌面快捷方式定制》 — Jay's Blog&url=https://blog.codeasy.cn/post/d7fffe82.html&via=https://blog.codeasy.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.codeasy.cn/post/d7fffe82.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABvUlEQVR42u3aQW7DMAwEwPz/0ynQU4HExpK0ZBcYnYLEtUY9ENJSr1c83r/j8/Pfbz6f+Xzy6J0XD1xc3DH3fTp6rz5/T/L94YJxcXE3cpPilSygR0kMuLi4z+T2tjt5gcPFxf2P3CNKD4eLi/t8brIFOS9neSyy6ayGi4s74E4C06s+b8p3cXFxx12J5KDSC1jfrYGLi7uHex5t9KZZfRzCxcW9lzuPQnJKHsHg4uKu5laDj3xJ+cWLfC5cXNyd3GpZySdLFlOYCxcXdyO3GmXmDY9JKfzyD8XFxd3C7RWjQrhZPA4VGqu4uLjLuJMJyheq4mdwcXGfwM0va/Y2PdXFHwY0uLi4W7jzElONNqrtWFxc3P3c6p9N6NU+adT5wcXFXcDNOxT5Rif/pjkvLi7uYm6zjREcgSabJ1xc3Cdwq0WnWpgmAxcX9y5utXU6aale0AfGxcVdzK0WlOriexc+LiiLuLi4Y25evKpRyFUFERcX9y5u9RJGL0aZXNjCxcV9JvecVShG8exffsXFxX0kNyfmQUxeLnFxcXdyqy/qtUOqR6NRLIKLizvgVgPTatiRb2KqoQwuLu4C7g9xIgYcxwSclgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Jay's Blog | 用技术改变生活';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Jay's Blog | 用技术改变生活';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

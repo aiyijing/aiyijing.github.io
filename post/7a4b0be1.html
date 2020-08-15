@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>HSTS协议分析与Nginx配置 | Jay&#39;s Blog | 用技术改变生活</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="nginx,hsts">
+    <meta name="description" content="起因由于业务上的要求，需要让客户强制的使用HTTPS连接，当一听到这个名词的时候，我立即想到用302重定向的方式。后来发现这叫 HSTS 连接。通过Chrome 浏览器的黑暗模式，尝试访问了百度，并分析了其中的报文。">
+<meta name="keywords" content="nginx,hsts">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HSTS协议分析与Nginx配置">
+<meta property="og:url" content="https://blog.codeasy.cn/post/7a4b0be1.html">
+<meta property="og:site_name" content="Jay&#39;s Blog">
+<meta property="og:description" content="起因由于业务上的要求，需要让客户强制的使用HTTPS连接，当一听到这个名词的时候，我立即想到用302重定向的方式。后来发现这叫 HSTS 连接。通过Chrome 浏览器的黑暗模式，尝试访问了百度，并分析了其中的报文。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2019/png/279029/1552226567523-73883bc6-7835-4ec2-b0d2-8bf1e127c535.png#align=left&display=inline&height=442&name=image.png&originHeight=442&originWidth=1118&size=83830&status=done&width=1118">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2019/png/279029/1552227142041-5f2277d0-bd27-48e7-b997-f0a72ced4dd0.png#align=left&display=inline&height=250&name=image.png&originHeight=250&originWidth=1150&size=43422&status=done&width=1150">
+<meta property="og:updated_time" content="2020-08-15T10:18:45.423Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HSTS协议分析与Nginx配置">
+<meta name="twitter:description" content="起因由于业务上的要求，需要让客户强制的使用HTTPS连接，当一听到这个名词的时候，我立即想到用302重定向的方式。后来发现这叫 HSTS 连接。通过Chrome 浏览器的黑暗模式，尝试访问了百度，并分析了其中的报文。">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2019/png/279029/1552226567523-73883bc6-7835-4ec2-b0d2-8bf1e127c535.png#align=left&display=inline&height=442&name=image.png&originHeight=442&originWidth=1118&size=83830&status=done&width=1118">
+    
+        <link rel="alternate" type="application/atom+xml" title="Jay&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Jay Ai</h5>
+          <a href="mailto:aiyijing@codeasy.cn" title="aiyijing@codeasy.cn" class="mail">aiyijing@codeasy.cn</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/aiyijing" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">HSTS协议分析与Nginx配置</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">HSTS协议分析与Nginx配置</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-01T09:56:00.000Z" itemprop="datePublished" class="page-time">
+  2019-03-01
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/知识备忘/">知识备忘</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#起因"><span class="post-toc-number">1.</span> <span class="post-toc-text">起因</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Nginx配置"><span class="post-toc-number">2.</span> <span class="post-toc-text">Nginx配置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#结语"><span class="post-toc-number">3.</span> <span class="post-toc-text">结语</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-HSTS协议分析与Nginx配置" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">HSTS协议分析与Nginx配置</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-01 17:56:00" datetime="2019-03-01T09:56:00.000Z" itemprop="datePublished">2019-03-01</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/知识备忘/">知识备忘</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><a name="968aa9a1"></a></p>
+<h3 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h3><p>由于业务上的要求，需要让客户强制的使用HTTPS连接，当一听到这个名词的时候，我立即想到用302重定向的方式。后来发现这叫 HSTS 连接。<br>通过Chrome 浏览器的黑暗模式，尝试访问了百度，并分析了其中的报文。<br><br><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.nlark.com/yuque/0/2019/png/279029/1552226567523-73883bc6-7835-4ec2-b0d2-8bf1e127c535.png#align=left&display=inline&height=442&name=image.png&originHeight=442&originWidth=1118&size=83830&status=done&width=1118" alt="image.png" title>
+                </div>
+                <div class="image-caption">image.png</div>
+            </figure><br>很明确发现服务器通过302 重定向，引导浏览器指向了https连接。而在第二次通过 <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a> 的时候，浏览器默认使用了https 连接<br><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.nlark.com/yuque/0/2019/png/279029/1552227142041-5f2277d0-bd27-48e7-b997-f0a72ced4dd0.png#align=left&display=inline&height=250&name=image.png&originHeight=250&originWidth=1150&size=43422&status=done&width=1150" alt="image.png" title>
+                </div>
+                <div class="image-caption">image.png</div>
+            </figure><br>这一部分工作是由浏览器帮用户完成的。通过查询报文发现，response中有一个特殊的字段 <br><code>Strict-Transport-Security:max-age=172800</code><br>正是该字段，确定了https的有效时间，这个时间会随着每次访问而不断的刷新，所以只要用户不是长期的不访问网站，浏览器都会默认的使用https,进而极大的减少了中间人劫持的风险。<br><a name="65dc33bd"></a></p>
+<h3 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h3><p>通过摸索，我们已经知道了HSTS的原理，那么我们回到业务本身，当前业务使用的是nginx服务器，只要nginx 80端口配置块加上301 or 302重定向，同时在ssl连接中加入有效期设置Header，就可以完成HSTS。因为浏览器可以帮助我们完成很多步骤。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line"><span class="meta">		#</span> ipv4 地址监听</span><br><span class="line">    listen 80 default_server;</span><br><span class="line">    # ipv6 地址监听</span><br><span class="line">    listen [::]:80 default_server;</span><br><span class="line">    server_name _;</span><br><span class="line"></span><br><span class="line">    # 利用301重定向</span><br><span class="line">    return 301 https://$host;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然此时还需要在https 配置块中设置 Strict-Transport-Security的失效<br><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl;</span><br><span class="line">    server_name;</span><br><span class="line">    #在Http 响应header中加入  Strict-Transport-Security</span><br><span class="line">    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此时便大功告成。通过浏览器访问即可发现和访问百度一样的效果<br><a name="433531fd"></a></p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>HSTS 方案的确是一种安全通信的保障，通过浏览器和服务器的协作，实现了用户无感知的安全访问。但是这也有一定的缺陷。如果用户清除了浏览器缓存，或者用户更换了浏览器就需要重新的进行302重定向。但是这样也比用户时时刻刻在http下裸奔好。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-15T10:18:45.423Z" itemprop="dateUpdated">2020-08-15 18:18:45</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.codeasy.cn">
+            <img src="/img/avatar.jpg" alt="Jay Ai">
+            Jay Ai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hsts/">hsts</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.codeasy.cn/post/7a4b0be1.html&title=《HSTS协议分析与Nginx配置》 — Jay's Blog&pic=https://blog.codeasy.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.codeasy.cn/post/7a4b0be1.html&title=《HSTS协议分析与Nginx配置》 — Jay's Blog&source=用技术改变生活" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.codeasy.cn/post/7a4b0be1.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《HSTS协议分析与Nginx配置》 — Jay's Blog&url=https://blog.codeasy.cn/post/7a4b0be1.html&via=https://blog.codeasy.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.codeasy.cn/post/7a4b0be1.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/post/d7fffe82.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">桌面快捷方式定制</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/post/491eefce.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">mongoDB 安装与使用</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+<section class="comments" id="comments">
+    <div id="disqus_thread"></div>
+    <script>
+    var disqus_shortname = 'blog-codeasy-cn';
+    lazyScripts.push('//' + disqus_shortname + '.disqus.com/embed.js')
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Jay Ai &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.codeasy.cn/post/7a4b0be1.html&title=《HSTS协议分析与Nginx配置》 — Jay's Blog&pic=https://blog.codeasy.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.codeasy.cn/post/7a4b0be1.html&title=《HSTS协议分析与Nginx配置》 — Jay's Blog&source=用技术改变生活" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.codeasy.cn/post/7a4b0be1.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《HSTS协议分析与Nginx配置》 — Jay's Blog&url=https://blog.codeasy.cn/post/7a4b0be1.html&via=https://blog.codeasy.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.codeasy.cn/post/7a4b0be1.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByUlEQVR42u3awY6DMAxF0f7/TzNbpA6Z+2xiBulmVVEaDhurfs7ng9dxWucr39+er/Pdbl5y5cptc4/l+sbx1yC/5Qa5cuXOc/l2axZ65MX+63vkypX7Fi4pf+vrcuXKfTt3fT96mFy5cl/FTUsSaXLWd27v1eTKldvgpiVpx+ct+a5cuXJL3KO90rEKL16/7CNXrtwRblp0OgNUErCi1kiuXLkPcWsb8fFJLaKVK1fuDJcftkgRvCAG5VKuXLmDXB5l1nAkEEHNlVy5cse5/M8HH6DWuGgaLFeu3EEuDyxIMMqHpqRcypUrd4ZLChAPL2ovQCqVXLlyn+Kmpx1qr50GMQFdrly5t3J5i1LLMNPX+OPpcuXK3czlzU86buHxSnBoQ65cuSPc9AgFD0k78UcwapUrV+4GLv9Z8cAEaJCC5keuXLkjXFKe7h2y8obqsizKlSt3M/cIV9om1aLVYLAqV67cDdzOBLP22v1CKVeu3BkuL15pJFprruTKlft/uGnzU5voPtaryZUrdxu3Ngjp/PVpFTK5cuWOcNNBSHoP+lauXLmD3E7zUws9SchyOWSVK1fuZi4PTPnxCz5KuetIh1y5cm/a8wfQMPwzDNBamwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Jay's Blog | 用技术改变生活';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Jay's Blog | 用技术改变生活';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

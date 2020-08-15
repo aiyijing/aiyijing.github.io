@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>进入暗网-Tor v3 搭建教程 | Jay&#39;s Blog | 用技术改变生活</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="tor,暗网">
+    <meta name="description" content="2019年1月 Tor 官方组织发布了 Tor v3 的稳定版本，同时 Browser Tor 的更新，许多的暗网组织都进行网络的升级。洋葱域名 .onion 也由16位扩展到 56位。目前v2网络还可以正常的访问。但是升级到 V3 是迟早的事情，但是国内许多的镜像源都每有进行 Tor 的更新。以下仅仅以 Ubuntu 16.04 TLS 为例，说明 Tor v3 的安装过程。 准备工作 安装 a">
+<meta name="keywords" content="tor,暗网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进入暗网-Tor v3 搭建教程">
+<meta property="og:url" content="https://blog.codeasy.cn/post/3602e88e.html">
+<meta property="og:site_name" content="Jay&#39;s Blog">
+<meta property="og:description" content="2019年1月 Tor 官方组织发布了 Tor v3 的稳定版本，同时 Browser Tor 的更新，许多的暗网组织都进行网络的升级。洋葱域名 .onion 也由16位扩展到 56位。目前v2网络还可以正常的访问。但是升级到 V3 是迟早的事情，但是国内许多的镜像源都每有进行 Tor 的更新。以下仅仅以 Ubuntu 16.04 TLS 为例，说明 Tor v3 的安装过程。 准备工作 安装 a">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-15T10:18:45.423Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="进入暗网-Tor v3 搭建教程">
+<meta name="twitter:description" content="2019年1月 Tor 官方组织发布了 Tor v3 的稳定版本，同时 Browser Tor 的更新，许多的暗网组织都进行网络的升级。洋葱域名 .onion 也由16位扩展到 56位。目前v2网络还可以正常的访问。但是升级到 V3 是迟早的事情，但是国内许多的镜像源都每有进行 Tor 的更新。以下仅仅以 Ubuntu 16.04 TLS 为例，说明 Tor v3 的安装过程。 准备工作 安装 a">
+    
+        <link rel="alternate" type="application/atom+xml" title="Jay&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Jay Ai</h5>
+          <a href="mailto:aiyijing@codeasy.cn" title="aiyijing@codeasy.cn" class="mail">aiyijing@codeasy.cn</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/aiyijing" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">进入暗网-Tor v3 搭建教程</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">进入暗网-Tor v3 搭建教程</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-05T04:14:27.000Z" itemprop="datePublished" class="page-time">
+  2019-04-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux-服务搭建/">Linux 服务搭建</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#准备工作"><span class="post-toc-number">1.</span> <span class="post-toc-text">准备工作</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#安装"><span class="post-toc-number">2.</span> <span class="post-toc-text">安装</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#软件配置"><span class="post-toc-number">3.</span> <span class="post-toc-text">软件配置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#结语"><span class="post-toc-number">4.</span> <span class="post-toc-text">结语</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-进入暗网-Tor-v3-搭建教程" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">进入暗网-Tor v3 搭建教程</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-05 12:14:27" datetime="2019-04-05T04:14:27.000Z" itemprop="datePublished">2019-04-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux-服务搭建/">Linux 服务搭建</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>2019年1月 Tor 官方组织发布了 Tor v3 的稳定版本，同时 Browser Tor 的更新，许多的暗网组织都进行网络的升级。洋葱域名 .onion 也由16位扩展到 56位。目前v2网络还可以正常的访问。但是升级到 V3 是迟早的事情，但是国内许多的镜像源都每有进行 Tor 的更新。以下仅仅以 Ubuntu 16.04 TLS 为例，说明 Tor v3 的安装过程。<br><a name="88210852"></a></p>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ol>
+<li>安装 apt-transport-https，让 APT 支持 https</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install apt-transport-https</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>添加APT源，编辑 <code>/etc/apt/sources.list</code> 将以下源写入文件末尾</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb https://deb.torproject.org/torproject.org xenial main</span><br><span class="line">deb-src https://deb.torproject.org/torproject.org xenial main</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>安装gpg key</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --import</span><br><span class="line">gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -</span><br></pre></td></tr></table></figure>
+<p><a name="e655a410"></a></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>先更新APT包管理器，然后进行tor安装（谨记）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install tor deb.torproject.org-keyring</span><br></pre></td></tr></table></figure></p>
+<p><a name="d41d8cd9"></a></p>
+<p>#####<br><a name="7ed5a600"></a></p>
+<h3 id="软件配置"><a href="#软件配置" class="headerlink" title="软件配置"></a>软件配置</h3><p>通过以上的安装Tor 代理其实已经启动的，可以通过 <code>netstat -tuln | grep 9050</code>看到服务器已经启动。为了增加安全性，我们现在要对他进行个人设置。<br>生成自己的 hash密码<br>1.生成 hash-password<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tor --hash-password password</span><br></pre></td></tr></table></figure></p>
+<p>2.修改配置文件 <code>/etc/tor/torrc</code><br>   把注释中的ControlPort9051取消注释<br>   把注释中的HashedControlPassword取消注释，后面的密码改成由上一步生成的密码<br>3.重新启动Tor 代理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/tor restart</span><br></pre></td></tr></table></figure>
+<p><a name="433531fd"></a></p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>通过以上的配置我们已经通过tor默认监听的9050端口使用sock5代理。下一篇博文将会介绍如何将sock5转换为浏览器可以用的HTTP代理。当然你也可以通过浏览器插件的方式使用sock5代理。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-15T10:18:45.423Z" itemprop="dateUpdated">2020-08-15 18:18:45</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.codeasy.cn">
+            <img src="/img/avatar.jpg" alt="Jay Ai">
+            Jay Ai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tor/">tor</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/暗网/">暗网</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.codeasy.cn/post/3602e88e.html&title=《进入暗网-Tor v3 搭建教程》 — Jay's Blog&pic=https://blog.codeasy.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.codeasy.cn/post/3602e88e.html&title=《进入暗网-Tor v3 搭建教程》 — Jay's Blog&source=用技术改变生活" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.codeasy.cn/post/3602e88e.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《进入暗网-Tor v3 搭建教程》 — Jay's Blog&url=https://blog.codeasy.cn/post/3602e88e.html&via=https://blog.codeasy.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.codeasy.cn/post/3602e88e.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/post/b16689c0.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">云原生技术--随想</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/post/5bd45715.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">进入暗网-Tor v3 Sock5 转HTTP代理</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+<section class="comments" id="comments">
+    <div id="disqus_thread"></div>
+    <script>
+    var disqus_shortname = 'blog-codeasy-cn';
+    lazyScripts.push('//' + disqus_shortname + '.disqus.com/embed.js')
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Jay Ai &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.codeasy.cn/post/3602e88e.html&title=《进入暗网-Tor v3 搭建教程》 — Jay's Blog&pic=https://blog.codeasy.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.codeasy.cn/post/3602e88e.html&title=《进入暗网-Tor v3 搭建教程》 — Jay's Blog&source=用技术改变生活" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.codeasy.cn/post/3602e88e.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《进入暗网-Tor v3 搭建教程》 — Jay's Blog&url=https://blog.codeasy.cn/post/3602e88e.html&via=https://blog.codeasy.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.codeasy.cn/post/3602e88e.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByElEQVR42u3aW46DMAwFUPa/abqBIb12HkWjk6+qReTQj8j25bridT+s5NfxPa8dCxcXd5p7D1dyzRPx6Q7jX788Ni4u7kHu+KDpXTN+jOr9cXFx38zNj6SkPsHFxf0f3GpvkjQ/uLi47+QmzU+PPjNYwcXF/RW3t/Haz1vmu7i4uC3uXVzj5if/vrk7Li7uEW5+oPQoeayS74uLi7ubW2118lAkb6WSNqkwbcXFxZ3mVoPPmUi1eofCLAcXF3cDd+aVqaRwmSlu/ngwXFzcI9w8Iq2GHL1jKzkccXFxz3CbzxeXRzOJSTbewcXFXcOtDiOSQKVa3BQaKlxc3IPcVaOQVW3SowoXF/cINy9TylFHK6adan5wcXE3cGcik2rIumBUiouLu5lb3aD3UkUeuH4phnBxcV/AzYuSXmtU/iNwcXEPcnuBykzzk5Q4UQWEi4u7lNsbd/aGHcmV5fQVFxd3A7f3SkTv+KuGNNXjDxcXdy03P3SSkUcUkQbXNwsdXFzcpdw80mhuEzdLhV4NFxf3ZdzeSHRBEIuLi/tKbt7eTL0D8iTExcU9yM2Hm3kYsyqyxcXFPc+tHiXVwWg11q02VLi4uEu5H3IGSOd6BO58AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Jay's Blog | 用技术改变生活';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Jay's Blog | 用技术改变生活';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>进入暗网-Tor v3 Sock5 转HTTP代理 | Jay&#39;s Blog | 用技术改变生活</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="tor,暗网,sock5,polipo">
+    <meta name="description" content="在上一篇文章中我们介绍了 Tor v3 的搭建教程，Tor V3 默认只提供 TCP端口为 9050 Sock5代理。HTTP代理工作在应用层，仅仅为 HTTP 协议提供服务（ps：当然也可以通过 HTTP 协议代理转为 Sock5 代理） 。sock 代理分很多种，Sock 3.4.5等，Sock 代理工作在 OSI 七层网络模型的会话层。它可以为任何的工作在会话层之上的程序提供服务，包括浏览器">
+<meta name="keywords" content="tor,暗网,sock5,polipo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进入暗网-Tor v3 Sock5 转HTTP代理">
+<meta property="og:url" content="https://blog.codeasy.cn/post/5bd45715.html">
+<meta property="og:site_name" content="Jay&#39;s Blog">
+<meta property="og:description" content="在上一篇文章中我们介绍了 Tor v3 的搭建教程，Tor V3 默认只提供 TCP端口为 9050 Sock5代理。HTTP代理工作在应用层，仅仅为 HTTP 协议提供服务（ps：当然也可以通过 HTTP 协议代理转为 Sock5 代理） 。sock 代理分很多种，Sock 3.4.5等，Sock 代理工作在 OSI 七层网络模型的会话层。它可以为任何的工作在会话层之上的程序提供服务，包括浏览器">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-15T10:18:45.423Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="进入暗网-Tor v3 Sock5 转HTTP代理">
+<meta name="twitter:description" content="在上一篇文章中我们介绍了 Tor v3 的搭建教程，Tor V3 默认只提供 TCP端口为 9050 Sock5代理。HTTP代理工作在应用层，仅仅为 HTTP 协议提供服务（ps：当然也可以通过 HTTP 协议代理转为 Sock5 代理） 。sock 代理分很多种，Sock 3.4.5等，Sock 代理工作在 OSI 七层网络模型的会话层。它可以为任何的工作在会话层之上的程序提供服务，包括浏览器">
+    
+        <link rel="alternate" type="application/atom+xml" title="Jay&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Jay Ai</h5>
+          <a href="mailto:aiyijing@codeasy.cn" title="aiyijing@codeasy.cn" class="mail">aiyijing@codeasy.cn</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/aiyijing" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">进入暗网-Tor v3 Sock5 转HTTP代理</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">进入暗网-Tor v3 Sock5 转HTTP代理</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-04T07:16:03.000Z" itemprop="datePublished" class="page-time">
+  2019-04-04
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux-服务搭建/">Linux 服务搭建</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#环境以及工具"><span class="post-toc-number">1.</span> <span class="post-toc-text">环境以及工具</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#安装Python2-7以及python-pip"><span class="post-toc-number">2.</span> <span class="post-toc-text">安装Python2.7以及python-pip</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#安装polipo"><span class="post-toc-number">3.</span> <span class="post-toc-text">安装polipo</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#配置polipo"><span class="post-toc-number">4.</span> <span class="post-toc-text">配置polipo</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#重启polipo"><span class="post-toc-number">5.</span> <span class="post-toc-text">重启polipo</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-进入暗网-Tor-v3-Sock5-转HTTP代理" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">进入暗网-Tor v3 Sock5 转HTTP代理</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-04 15:16:03" datetime="2019-04-04T07:16:03.000Z" itemprop="datePublished">2019-04-04</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux-服务搭建/">Linux 服务搭建</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>在上一篇文章中我们介绍了 Tor v3 的搭建教程，Tor V3 默认只提供 TCP端口为 9050 Sock5代理。HTTP代理工作在应用层，仅仅为 HTTP 协议提供服务（ps：当然也可以通过 HTTP 协议代理转为 Sock5 代理） 。sock 代理分很多种，Sock 3.4.5等，Sock 代理工作在 OSI 七层网络模型的会话层。它可以为任何的工作在会话层之上的程序提供服务，包括浏览器、游戏、视频传输等等应用程序。从笔者的角度讲 Sock5 是绝对的优于HTTP代理，只是由于前期程序框架依赖 HTTP 代理故需要将 Sock5 转换为HTTP.<br><a name="d52b3df2"></a></p>
+<h4 id="环境以及工具"><a href="#环境以及工具" class="headerlink" title="环境以及工具"></a>环境以及工具</h4><p>系统：Ubuntu 16.04<br>工具：Python Python-pip<br><a name="d41d8cd9"></a></p>
+<p>####<br><a name="e6ecfb1f"></a></p>
+<h4 id="安装Python2-7以及python-pip"><a href="#安装Python2-7以及python-pip" class="headerlink" title="安装Python2.7以及python-pip"></a>安装Python2.7以及python-pip</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update # 更新源</span><br><span class="line">sudo apt install python</span><br><span class="line">sudo apt install python-pip</span><br></pre></td></tr></table></figure>
+<p><a name="a9484aef"></a></p>
+<h4 id="安装polipo"><a href="#安装polipo" class="headerlink" title="安装polipo"></a>安装polipo</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install polipo</span><br></pre></td></tr></table></figure>
+<p><a name="4cc35e97"></a></p>
+<h4 id="配置polipo"><a href="#配置polipo" class="headerlink" title="配置polipo"></a>配置polipo</h4><p>polipo的配置文件默认在/etc/polipo/config</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">服务器监听地址和端口配置</span></span><br><span class="line">proxyAddress = "0.0.0.0"</span><br><span class="line">proxyPort = 8118</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> If you <span class="keyword">do</span> that, you<span class="string">'ll want to restrict the set of hosts allowed to</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> connect:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> allowedClients = <span class="string">"127.0.0.1, 134.157.168.57"</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> allowedClients = <span class="string">"127.0.0.1, 134.157.168.0/24"</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 客户端访问控制</span></span><br><span class="line">allowedClients = 127.0.0.1, 0.0.0.0/0</span><br><span class="line">allowedPorts = 1-65535</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Uncomment this <span class="keyword">if</span> you want your Polipo to identify itself by</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> something <span class="keyword">else</span> than the host name:</span></span><br><span class="line"></span><br><span class="line">proxyName = "localhost"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Uncomment this <span class="keyword">if</span> there<span class="string">'s only one user using this instance of Polipo:</span></span></span><br><span class="line"></span><br><span class="line">cacheIsShared = false</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">Tor V3 Sock5代理地址</span></span><br><span class="line">socksParentProxy = "localhost:9050"</span><br><span class="line"><span class="meta">#</span><span class="bash">代理类型</span></span><br><span class="line">socksProxyType = socks5</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#########一下配置默认，和缓存以及权限控制有关</span></span></span><br><span class="line">chunkHighMark = 67108864</span><br><span class="line">diskCacheRoot = ""</span><br><span class="line">localDocumentRoot = ""</span><br><span class="line">disableLocalInterface = true</span><br><span class="line">disableConfiguration = true</span><br><span class="line">dnsUseGethostbyname = yes</span><br><span class="line">disableVia = true</span><br><span class="line">censoredHeaders = from,accept-language,x-pad,link</span><br><span class="line">censorReferer = maybe</span><br><span class="line">maxConnectionAge = 5m</span><br><span class="line">maxConnectionRequests = 120</span><br><span class="line">serverMaxSlots = 8</span><br><span class="line">serverSlots = 2</span><br><span class="line">tunnelAllowedPorts = 1-65535</span><br></pre></td></tr></table></figure>
+<p>1 配置polipo连接到sock5服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">Tor V3 Sock5代理地址</span></span><br><span class="line">socksParentProxy = "localhost:9050"</span><br><span class="line"><span class="meta">#</span><span class="bash">代理类型</span></span><br><span class="line">socksProxyType = socks5</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#########一下配置默认，和缓存以及权限控制有关</span></span></span><br></pre></td></tr></table></figure>
+<p>2 如果你想通过IPV6地址访问代理服务器请向这样设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">proxyAddress = &quot;::0&quot; IPV6 监听地址</span><br><span class="line">proxyPort = 8118 #polipo http 代理端口</span><br></pre></td></tr></table></figure>
+<p>3 客户端的IP限制,<code>0.0.0.0/0</code>代表任意主机可以访问，请按照实际需求设置，多个地址段用”,”隔开</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 客户端访问控制</span><br><span class="line">allowedClients = 127.0.0.1, 0.0.0.0/0 </span><br><span class="line">allowedPorts = 1-65535</span><br></pre></td></tr></table></figure>
+<p><a name="e0ae5e26"></a></p>
+<h4 id="重启polipo"><a href="#重启polipo" class="headerlink" title="重启polipo"></a>重启polipo</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/polipo restart</span><br></pre></td></tr></table></figure>
+<p>此后就可以通过HTTP代理愉快的使用Tor v3 的http代理了。如果无法成功使用，请检查访问配置以及防火墙配置</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-15T10:18:45.423Z" itemprop="dateUpdated">2020-08-15 18:18:45</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.codeasy.cn">
+            <img src="/img/avatar.jpg" alt="Jay Ai">
+            Jay Ai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/polipo/">polipo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sock5/">sock5</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tor/">tor</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/暗网/">暗网</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.codeasy.cn/post/5bd45715.html&title=《进入暗网-Tor v3 Sock5 转HTTP代理》 — Jay's Blog&pic=https://blog.codeasy.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.codeasy.cn/post/5bd45715.html&title=《进入暗网-Tor v3 Sock5 转HTTP代理》 — Jay's Blog&source=用技术改变生活" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.codeasy.cn/post/5bd45715.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《进入暗网-Tor v3 Sock5 转HTTP代理》 — Jay's Blog&url=https://blog.codeasy.cn/post/5bd45715.html&via=https://blog.codeasy.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.codeasy.cn/post/5bd45715.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/post/3602e88e.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">进入暗网-Tor v3 搭建教程</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/post/d7fffe82.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">桌面快捷方式定制</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+<section class="comments" id="comments">
+    <div id="disqus_thread"></div>
+    <script>
+    var disqus_shortname = 'blog-codeasy-cn';
+    lazyScripts.push('//' + disqus_shortname + '.disqus.com/embed.js')
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Jay Ai &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.codeasy.cn/post/5bd45715.html&title=《进入暗网-Tor v3 Sock5 转HTTP代理》 — Jay's Blog&pic=https://blog.codeasy.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.codeasy.cn/post/5bd45715.html&title=《进入暗网-Tor v3 Sock5 转HTTP代理》 — Jay's Blog&source=用技术改变生活" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.codeasy.cn/post/5bd45715.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《进入暗网-Tor v3 Sock5 转HTTP代理》 — Jay's Blog&url=https://blog.codeasy.cn/post/5bd45715.html&via=https://blog.codeasy.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.codeasy.cn/post/5bd45715.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABzElEQVR42u3aQYqEQAwFUO9/6Z5tw6D+JFaNA89V04g+NyH5qeOIr8+v6/v/s9/f/5w981hx4eLijrmfyyu5J8cln3fzTFxc3I3c60LTu+fsldf0GxsuLu4ruZPGJWmVcHFx/y83b1aSD8PFxX0nNxl+rluZXpqxcFbDxcUdcPOUct3vJfkuLi5ui/spXslnXBep0dtxcXG3cHsNSm9RWl3Bnt6Ji4u7mJsHE72DF3k8GgUruLi4W7jVElM9YFEdfsotDi4u7jJuXsiSIxR5keoFMbi4uKu5SWsyP5BRLVuF4QcXF3cBt9q45LHmZEXabG5wcXEXcydrj2pzk49DuLi4f8WdU+Zj0k3AiouLu5hbWGAEQUl1TfvwrIaLi/sQN2lE8nJTXofMk11cXNyN3Grxyo9t5Qc4CoUMFxd3I/ephUp1oCrPari4uMu4eVMyOULRW8cekx4KFxe3yJ0vUKvxaC+IwcXF3cmdxJ29iOTZfAMXF3cdNy9e1aVI3ioVmiFcXNyN3Hylkb8miVCbsxouLu7rudX4Y7SIxcXFfTE3H2Cqd94IcXFxN3Kr5al65CIfmW4+DxcXdwu3XEriUae3fO2tZnFxcR/i/gDhaJp5GFrRlAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Jay's Blog | 用技术改变生活';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Jay's Blog | 用技术改变生活';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

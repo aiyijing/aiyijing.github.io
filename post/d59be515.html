@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>CentOS7下kubernetes单节点部署实验环境 | Jay&#39;s Blog | 用技术改变生活</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="kubernetes">
+    <meta name="description" content="Kubernetes分布式容器集群管理系统, 主要针对各个抽象化资源进行管理,如基础资源: Volumes Pod Replication Service.主要的软件包：下载地址：kubernetes release    主要文件说明      etcd 分布式存储数据库   kube-apiserver 认证 授权 准入   kube-controller-manager 资源管理器   ku">
+<meta name="keywords" content="kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7下kubernetes单节点部署实验环境">
+<meta property="og:url" content="https://blog.codeasy.cn/post/d59be515.html">
+<meta property="og:site_name" content="Jay&#39;s Blog">
+<meta property="og:description" content="Kubernetes分布式容器集群管理系统, 主要针对各个抽象化资源进行管理,如基础资源: Volumes Pod Replication Service.主要的软件包：下载地址：kubernetes release    主要文件说明      etcd 分布式存储数据库   kube-apiserver 认证 授权 准入   kube-controller-manager 资源管理器   ku">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-15T10:18:45.423Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS7下kubernetes单节点部署实验环境">
+<meta name="twitter:description" content="Kubernetes分布式容器集群管理系统, 主要针对各个抽象化资源进行管理,如基础资源: Volumes Pod Replication Service.主要的软件包：下载地址：kubernetes release    主要文件说明      etcd 分布式存储数据库   kube-apiserver 认证 授权 准入   kube-controller-manager 资源管理器   ku">
+    
+        <link rel="alternate" type="application/atom+xml" title="Jay&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Jay Ai</h5>
+          <a href="mailto:aiyijing@codeasy.cn" title="aiyijing@codeasy.cn" class="mail">aiyijing@codeasy.cn</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/aiyijing" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">CentOS7下kubernetes单节点部署实验环境</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">CentOS7下kubernetes单节点部署实验环境</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-05-05T06:23:10.000Z" itemprop="datePublished" class="page-time">
+  2019-05-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/知识备忘/">知识备忘</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Kubernetes"><span class="post-toc-number">1.</span> <span class="post-toc-text">Kubernetes</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#软件安装"><span class="post-toc-number">2.</span> <span class="post-toc-text">软件安装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#系统环境准备"><span class="post-toc-number">3.</span> <span class="post-toc-text">系统环境准备</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#apiserver-配置"><span class="post-toc-number">4.</span> <span class="post-toc-text">apiserver 配置</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#服务启动"><span class="post-toc-number">5.</span> <span class="post-toc-text">服务启动</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#墙内额外配置"><span class="post-toc-number">6.</span> <span class="post-toc-text">墙内额外配置</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-CentOS7下kubernetes单节点部署实验环境" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">CentOS7下kubernetes单节点部署实验环境</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-05-05 14:23:10" datetime="2019-05-05T06:23:10.000Z" itemprop="datePublished">2019-05-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/知识备忘/">知识备忘</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><p>分布式容器集群管理系统, 主要针对各个抽象化资源进行管理,如基础资源: Volumes Pod Replication Service.<br>主要的软件包：<br>下载地址：<a href="https://github.com/kubernetes/kubernetes/releases" target="_blank" rel="noopener">kubernetes release</a></p>
+<table>
+<thead>
+<tr>
+<th>主要文件说明</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>etcd</td>
+<td>分布式存储数据库</td>
+</tr>
+<tr>
+<td>kube-apiserver</td>
+<td>认证 授权 准入</td>
+</tr>
+<tr>
+<td>kube-controller-manager</td>
+<td>资源管理器</td>
+</tr>
+<tr>
+<td>kube-scheduler</td>
+<td>资源调度器</td>
+</tr>
+<tr>
+<td>kubelet</td>
+<td>Pod构建</td>
+</tr>
+<tr>
+<td>kube-proxy</td>
+<td>负载均衡</td>
+</tr>
+</tbody>
+</table>
+<p>其中Master节点需要安装也上所有软件,工作Node上需至少安装:kubelet kube-proxy.为了更加方便的学习kubernetes,所以本次教程仅仅使用单节点部署环境。当需要研究kube-scheduler kube-proxy的集群调度相关的功能时再进行Node的加入</p>
+<h2 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h2><p>在CentOS7环境下:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 更新源</span><br><span class="line">yum update</span><br><span class="line"><span class="meta">#</span> 安装软件,自动安装 kube-apiserver kube-controller-manager kube-scheduler kube-proxy</span><br><span class="line">yum install -y etcd kubernetes  </span><br><span class="line"><span class="meta">#</span> 自动安装依赖：docker-ce</span><br></pre></td></tr></table></figure></p>
+<h2 id="系统环境准备"><a href="#系统环境准备" class="headerlink" title="系统环境准备"></a>系统环境准备</h2><p>为了更加简单的部署,直接将防火墙关闭</p>
+<ul>
+<li>防火墙策略 官网文档<a href="https://kubernetes.io/zh/docs/reference/command-line-tools-reference/kube-proxy/" target="_blank" rel="noopener">document</a></li>
+<li>禁用防火墙</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld</span><br></pre></td></tr></table></figure>
+<ul>
+<li>禁止开机启动</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl disable firewalld</span><br></pre></td></tr></table></figure>
+<h2 id="apiserver-配置"><a href="#apiserver-配置" class="headerlink" title="apiserver 配置"></a>apiserver 配置</h2><p>若不需要建立API TOKEN 关闭KUBE_ADMISSION_CONTROL</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> vim /etc/kubernetes/apiserver</span><br><span class="line"><span class="meta">#</span> 禁用 KUBE_ADMISSION_CONTROL</span><br><span class="line"><span class="meta">#</span>KUBE_ADMISSION_CONTROL</span><br></pre></td></tr></table></figure>
+<h2 id="服务启动"><a href="#服务启动" class="headerlink" title="服务启动"></a>服务启动</h2><p>顺序启动服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">systemctl start etcd</span><br><span class="line">systemctl start docker</span><br><span class="line">systemctl start kube-apiserver</span><br><span class="line">systemctl start kube-controller-manager</span><br><span class="line">systemctl start kube-scheduler</span><br><span class="line">systemctl start kubelet</span><br><span class="line">systemctl start kube-proxy</span><br></pre></td></tr></table></figure>
+<h2 id="墙内额外配置"><a href="#墙内额外配置" class="headerlink" title="墙内额外配置"></a>墙内额外配置</h2><ul>
+<li>墙内无法访问 hub.docker.io<br>配置 docker 仓库镜像源  </li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> vim /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">"registry-mirrors": ["https://pee6w651.mirror.aliyuncs.com"]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>CentOS 7 默认 pause 镜像无法安装</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> vim /etc/kubernetes/kubelet</span><br><span class="line"><span class="meta">#</span> 更换为阿里云pause镜像</span><br><span class="line">KUBELET_POD_INFRA_CONTAINER="--pod-infra-container-image=registry.cn-beijing.aliyuncs.com/zhoujun/pause-amd64:3.1"</span><br></pre></td></tr></table></figure>
+<p>未完待续……</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-15T10:18:45.423Z" itemprop="dateUpdated">2020-08-15 18:18:45</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.codeasy.cn">
+            <img src="/img/avatar.jpg" alt="Jay Ai">
+            Jay Ai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.codeasy.cn/post/d59be515.html&title=《CentOS7下kubernetes单节点部署实验环境》 — Jay's Blog&pic=https://blog.codeasy.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.codeasy.cn/post/d59be515.html&title=《CentOS7下kubernetes单节点部署实验环境》 — Jay's Blog&source=用技术改变生活" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.codeasy.cn/post/d59be515.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CentOS7下kubernetes单节点部署实验环境》 — Jay's Blog&url=https://blog.codeasy.cn/post/d59be515.html&via=https://blog.codeasy.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.codeasy.cn/post/d59be515.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/post/beeed6f2.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">ceph 15.2.4 安装</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/post/b16689c0.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">云原生技术--随想</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+<section class="comments" id="comments">
+    <div id="disqus_thread"></div>
+    <script>
+    var disqus_shortname = 'blog-codeasy-cn';
+    lazyScripts.push('//' + disqus_shortname + '.disqus.com/embed.js')
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Jay Ai &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.codeasy.cn/post/d59be515.html&title=《CentOS7下kubernetes单节点部署实验环境》 — Jay's Blog&pic=https://blog.codeasy.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.codeasy.cn/post/d59be515.html&title=《CentOS7下kubernetes单节点部署实验环境》 — Jay's Blog&source=用技术改变生活" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.codeasy.cn/post/d59be515.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CentOS7下kubernetes单节点部署实验环境》 — Jay's Blog&url=https://blog.codeasy.cn/post/d59be515.html&via=https://blog.codeasy.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.codeasy.cn/post/d59be515.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABwUlEQVR42u3aO27EMAwFwL3/pTdtGjmPpCQYwahaGLZ21BDi5/OJ1/fXen6n9/7mhYuLO+Z+H9fq71dP8gOvdlsZcHFx73OTwFQNW/nzxICLi/tmbhLy8vsJLi7u/+AmX/WSJVxc3Ldx8/BULX/k4W9zroaLizvg5lXKc7+P1HdxcXFb3G9xJWWRXnEk+ndcXNwr3DygVA8zb8Eu38TFxT3MnYSY53JJ76s/wiIuLu51brJFlVVNfso3Mlxc3APcSeGjOoTRu9xE/R9cXNwD3Hy7vNU6CVuFXA0XF/cYN98up0+6OlHBBRcX9xh31xDV5HJT2BkXF/cKd/Wo1/7svZmEMFxc3Pvc6nUnv9A8E0fJDy4u7mHuhJIfLE+HosouLi7ude6kkNGjPP+OZkZwcXGPcfc2PPJ0qJmr4eLiXuTuGrGaB7uo04KLi7uVOymM9g7/XBYpd19xcXEPcCcjEdVxrt64RvMwuLi4Y241eBVKGDGlUGDFxcW9yO0VN6sxcluuhouL+zJuPmaRh7ByxoaLi/tKbu8ClIezpRAXF/cit1fcrF598pHNUZMVFxd3zC2HklaqkxdTCiUSXFzc/dwfg/ILCSmiczMAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Jay's Blog | 用技术改变生活';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Jay's Blog | 用技术改变生活';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
