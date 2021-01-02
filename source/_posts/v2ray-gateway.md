@@ -22,11 +22,11 @@ tags:
 可以忽略不记.因为我们运行 v2ray 容器时会使用主机网络栈.简单来说对于操作系统来讲就
 是多了几个if else.
 
-## 工具+材料
-## 刷入 Armbian
+## 1. 工具+材料
+## 2. 刷入 Armbian
 
-## 安装配置旁路网关
-### 安装docker
+## 3. 安装配置旁路网关
+### 3.1 安装docker
 
 * 配置源  
 
@@ -60,7 +60,7 @@ $ systemctl start docker
 ```
 
 
-### 启动 v2ray 
+### 3.2 启动 v2ray 
 * 下载镜像  
 
 v2ray 的服务端和客户端是共用一个文件/docker镜像. v2ray 换了维护者后,docker 镜像终于支持了ARM版的.
@@ -328,7 +328,7 @@ $ unset http_proxy=http://127.0.0.1:10809
 $ unset https_proxy=http://127.0.0.1:10809
 ```
 
-### 开启NAT转发,添加策略路由
+### 3.3 开启NAT转发,添加策略路由
 
 ```shell script
 $ echo net.ipv4.ip_forward=1 >> /etc/sysctl.conf && sysctl -p
@@ -336,7 +336,7 @@ $ ip rule add fwmark 1 table 100
 $ ip route add local 0.0.0.0/0 dev lo table 100
 ```
 
-### 配置 iptables 规则
+### 3.4 配置 iptables 规则
 这里的ip网段请参考自己LAN网段填写,否则旁路网关无法生效.我这里是`192.168.1.0/24`,
 如果你家是其他的网段请注意修改 
 ```shell script
@@ -353,7 +353,7 @@ iptables -t mangle -A V2RAY -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
 iptables -t mangle -A PREROUTING -j V2RAY 
 ```
 
-### ip rule规则,iptables规则开机自动重载
+### 3.5 ip rule规则,iptables规则开机自动重载
 ip rules 规则,iptables 规则在设备重启后会消失.所以这里将
 设置开机自启动脚本. 给 `/etc/rc.local` 文件赋予执行权限.
 如果没有该文件请自行创建. 在文件中添加如下配置.请注意修改LAN
@@ -378,7 +378,7 @@ iptables -t mangle -A PREROUTING -j V2RAY
 ###
 ```
 
-### 配置静态 IP
+### 3.6 配置静态 IP
 为了避免重启后网关IP变动,我们需要配置静态IP.请按照自己的 LAN 网段
 进行配置.我这里配置 `192.168.1.254`
 ```shell script
@@ -399,7 +399,7 @@ $ reboot
 ```
 
 
-## 客户端侧配置
+## 4 客户端侧配置
 有些家用无线路由支持配置: 下发网关,DNS 等配置.如果在无线路由器上配置下
 发网关以及DNS,那么设备连接上无线路由器后会自动获取到你在无线路由器上配置
 的网关以及DNS. openwrt 无线路由器可以在LAN口配置中增加 dhcp-option 
@@ -409,7 +409,7 @@ dhcp_option '3,192.168.1.254'
 dhcp_option '6,114.114.114.114,8.8.8.8'
 ```
 但并不是每个人都有这个条件,所以还是将说明一下客户端如何配置旁路网关地址
-### windows
+### 4.1 windows
 
 控制面板->网络和 Internet->网络连接  
 * WLAN  
@@ -423,18 +423,18 @@ dhcp_option '6,114.114.114.114,8.8.8.8'
 配置如下图:  
 
 
-### Android
+### 4.2 Android
 * 设置->WLAN->已连接热点
 配置如下:
 
 
-## 结束
+## 5 结束
 当你认真的完成这个教程的每一个步骤后,相信你已经能在手机,电脑等设备上无缝进行翻墙了.
 我给出的 v2ray 模板配置文件已经配置了自动分流.由于TCP,UDP报文都要经过v2ray处理,
 所以使用旁路网关玩游戏延迟会变高.客户端配置静态ip将网关还原默认的网关.
 
-## 参考文档
+## 6 参考文档
 
-[docker-ce tuna源](https://mirrors.tuna.tsinghua.edu.cn/help/docker-ce/)
-[透明代理(TPROXY)](https://guide.v2fly.org/app/tproxy.html#%E8%AE%BE%E7%BD%AE%E7%BD%91%E5%85%B3)
-[我家云刷OMV记录](https://zhuanlan.zhihu.com/p/101705429?utm_source=cn.wiz.note)
+[docker-ce tuna源](https://mirrors.tuna.tsinghua.edu.cn/help/docker-ce/)  
+[透明代理(TPROXY)](https://guide.v2fly.org/app/tproxy.html#%E8%AE%BE%E7%BD%AE%E7%BD%91%E5%85%B3)  
+[我家云刷OMV记录](https://zhuanlan.zhihu.com/p/101705429?utm_source=cn.wiz.note)  
