@@ -1,5 +1,5 @@
 ---
-title: "我家云L1 PRO"刷 Armbian 作为 V2ray 旁路网关
+title: "我家云L1 PRO"刷 Armbian 作为 V2Ray 旁路网关
 comments: true
 date: 2021-01-02 16:42:19
 categories:
@@ -9,7 +9,7 @@ tags:
   - ARM
   - docker
 ---
-# "我家云L1 PRO"刷 Armbian 作为 V2ray 旁路网关
+# "我家云L1 PRO"刷 Armbian 作为 V2Ray 旁路网关
 
 我一直以来都是使用"蜗牛星际"100m网口的主机作为旁路网关, 最近更换联通250M宽带
 100M网口作为旁路口显然无法跑满带宽了. 恰好手里一个很久之前用玩客云和别人交换的
