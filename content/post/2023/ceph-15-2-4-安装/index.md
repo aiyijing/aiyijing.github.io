@@ -3,9 +3,9 @@ title: ceph 15.2.4 安装
 comments: true
 date: 2020-08-15 16:58:24
 categories:
-- 知识备忘
+  - 知识备忘
 tags:
-- ceph
+  - ceph
 ---
 
 ## 1 主机信息以及预备环境
@@ -27,24 +27,27 @@ PS: Host 信息及其重要,如果未同步可能造成安装失败
 ```
 
 * 磁盘信息
+
 ```bash
 ceph1 /dev/vdb
 ceph2 /dev/vdb
 ceph3 /dev/vdb
 ```
 
-
 ### 1.2 预备环境
 
 预备环境所有主机均需满足
 
 #### 1.2.1 安装 python-setuptools
+
 centos 7.8 minimal 未预装 python-setuptools
 pecan, werkzeug 为ceph依赖项
+
 ```bash
 yum install python-setuptools -y
 pip3 install pecan werkzeug
 ```
+
 #### 1.2.2 安装 ntp
 
 ```bash
@@ -54,6 +57,7 @@ systemctl status ntpd
 ```
 
 #### 1.2.3 使用 epel-release
+
 ```bash
 yum install -y yum-utils
 yum install --nogpgcheck -y epel-release
@@ -90,10 +94,12 @@ yum makecache
 ```
 
 ## 2 ceph安装
+
 ceph 的安装通过 ceph-deploy 完成, 所以所有的安装过程均可以在一台主机上完成
 此处我们选择: ceph1
 
 ### 2.1 ceph 软件包安装
+
 ```bash
 yum install -y ceph ceph-deploy ceph-radosgw
 ```
@@ -101,6 +107,7 @@ yum install -y ceph ceph-deploy ceph-radosgw
 ### 2.2 创建 ceph 集群
 
 * 创建配置文件
+
 ```bash
 # ceph 配置文件
 cd /etc/ceph/
@@ -201,21 +208,21 @@ ceph-deploy forgetkeys
 ceph-deploy purge ceph1 ceph2 ceph3
 ```
 
-
 ## 4 问题
 
 * 重装遇到设备遇到 device busy
-在重装过程中,通过 ceph-deploy purge 卸载 ceph 并不会删除业务数据,业务数据依然
-保存在 /var/lib/ceph/osd 下. 这时候磁盘被挂载到 /var/lib/ceph/osd/ceph-{x}
-目录下.需要手动卸载磁盘并且格式化
+  在重装过程中,通过 ceph-deploy purge 卸载 ceph 并不会删除业务数据,业务数据依然
+  保存在 /var/lib/ceph/osd 下. 这时候磁盘被挂载到 /var/lib/ceph/osd/ceph-{x}
+  目录下.需要手动卸载磁盘并且格式化
 
 ```
 umount /var/lib/ceph/osd/ceph-{x}
 rm -fr /var/lib/ceph
 dd if=/dev/zero of=/dev/vdb bs=512K count=1
 ```
+
 * mds 进程重启
-mds 是一个十分占用内存的进程, 出故障后基本能通过重启恢复.
+  mds 是一个十分占用内存的进程, 出故障后基本能通过重启恢复.
 
 ```bash
 [root@ceph1 ~]# systemctl list-units|grep ceph-mds
