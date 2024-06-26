@@ -1,3 +1,13 @@
+---
+title: cgroup v1 中文文档
+comments: true
+categories:
+  - Container
+tags:
+  - cgroup
+date: 2020-03-01 15:24:15
+---
+
 ## 目录：
 =========
 
@@ -437,3 +447,7 @@ cgroup 文件系统支持其目录和文件中的某些类型的扩展属性。
 问：当我附加进程时，一行中只有第一个进程真正被附加了！
 答：每次调用 write() 只能返回一个错误代码。因此，你应该每次只放置一个 PID。
 
+
+
+# 原文参考
+https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt
