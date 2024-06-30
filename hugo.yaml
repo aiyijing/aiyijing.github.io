@@ -113,3 +113,7 @@ imageProcessing:
 
     # Available values: auto, light, dark
     default: auto
+services:
+  # GA Tracking ID
+  googleAnalytics:
+    id: G-G7GK4C00DE
